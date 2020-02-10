@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @Builder
 public class BoardParam {
-    @Min(0)
+    @Min(1)
     Long seq;
     @NotEmpty
     String content;

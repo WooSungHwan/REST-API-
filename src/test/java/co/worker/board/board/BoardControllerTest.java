@@ -105,4 +105,40 @@ public class BoardControllerTest {
                 .andExpect(status().isOk());
         this.getBoard();
     }
+
+    //Bad_Request 테스트
+    @Test //add
+    public void board_BadRequest_add() throws Exception{
+        BoardParam param = BoardParam.builder().content("test").title("test").build(); //username not null
+        //BoardParam param = BoardParam.builder().title("title").content("").username("woo").build(); // content not empty
+        mockMvc.perform(post("/api/boards/add")
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(objectMapper.writeValueAsString(param)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void board_BadRequest_getOne() throws Exception{ // 문제 수정해야됨.
+        // 400이 나와야하는데 200이 나옴. -> ok메소드를 실행해서 그럼 -> 오류 -> 400이 나오도록 수정.
+        mockMvc.perform(get("/api/boards/-1")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void board_BadRequest_edit() throws Exception {
+        //BoardParam param = BoardParam.builder().content("test").title("test").build(); //  username null
+        BoardParam param = BoardParam.builder().content("test").title("test").username("gg").build(); // seq min 0
+        mockMvc.perform(put("/api/boards/0")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(param)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
 }

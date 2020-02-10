@@ -35,14 +35,15 @@ public class BoardService {
 
     @Transactional
     public Object getBoard(Long seq){
-        return boardRepository.findById(seq).map(boardEntity -> {
+        Optional<BoardEntity> results = boardRepository.findById(seq);
+        return results.isPresent() ? results.map(boardEntity -> {
             BoardResult boardResult = new BoardResult();
             boardResult.setContent(boardEntity.getContent());
             boardResult.setUsername(boardEntity.getUsername());
             boardResult.setTitle(boardEntity.getTitle());
             boardResult.setSeq(boardEntity.getSeq());
             return boardResult;
-        }).get();
+        }).get() : null;
     }
 
     @Transactional

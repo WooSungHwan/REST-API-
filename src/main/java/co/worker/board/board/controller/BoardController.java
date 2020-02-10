@@ -2,14 +2,19 @@ package co.worker.board.board.controller;
 
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.service.BoardService;
+import co.worker.board.configuration.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @RestController
+@Validated
 @RequestMapping("/api/boards")
 public class BoardController {
 
@@ -21,8 +26,8 @@ public class BoardController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity get(){
-        return ResponseEntity.ok(boardService.getBoard());
+    public Object getAll() throws Exception{
+        return boardService.getBoard();
     }
 
     @GetMapping(
@@ -30,27 +35,27 @@ public class BoardController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity get(@PathVariable("seq") Long seq){
-        return ResponseEntity.ok(boardService.getBoard(seq));
+    public Object get(@PathVariable("seq") @Min(1) Long seq) throws Exception{
+        return boardService.getBoard(seq);
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity add(@RequestBody @Valid BoardParam param){
+    public Object add(@RequestBody @Valid BoardParam param) throws Exception{
         boardService.add(param);
-        return ResponseEntity.ok(null);
+        return null;
     }
 
     @PutMapping(value = "/{seq}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity edit(@RequestBody @Valid BoardParam param,
-                               @PathVariable("seq") Long seq){
+    public Object edit(@RequestBody @Valid BoardParam param,
+                               @PathVariable("seq") @Min(1) Long seq) throws Exception{
         param.setSeq(seq);
         boardService.edit(param);
-        return ResponseEntity.ok(null);
+        return null;
     }
 
     @DeleteMapping(value = "/{seq}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity delete(@PathVariable("seq") Long seq){
+    public Object delete(@PathVariable("seq") @Min(1) Long seq) throws Exception{
         boardService.delete(seq);
-        return ResponseEntity.ok(null);
+        return null;
     }
 }
