@@ -34,7 +34,7 @@ public class BoardControllerTest {
 
     @Before
     public void insertBoard(){
-        for(int i =0; i<10; i++){
+        for(int i =1; i<=10; i++){
             BoardEntity board = new BoardEntity();
             board.setContent("내용"+i);
             board.setTitle("제목"+i);
@@ -50,8 +50,6 @@ public class BoardControllerTest {
                 .title("추가제목")
                 .username("추가유저")
                 .build();
-
-        System.out.println(objectMapper.writeValueAsString(param));
 
         mockMvc.perform(post("/api/boards/add")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

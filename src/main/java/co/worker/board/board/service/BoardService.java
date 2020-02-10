@@ -4,6 +4,7 @@ import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +17,17 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     @Autowired
-    BoardRepository boardRepository;
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public List<BoardResult> getBoard(){
         List<BoardEntity> entityList = boardRepository.findAll();
         List<BoardResult> results = entityList.stream().map(boardEntity -> {
             BoardResult boardResult = new BoardResult();
-            boardResult.setContent(boardEntity.getContent());
-            boardResult.setUsername(boardEntity.getUsername());
-            boardResult.setTitle(boardEntity.getTitle());
-            boardResult.setSeq(boardEntity.getSeq());
+            modelMapper.map(boardEntity, boardResult);
             return boardResult;
         }).collect(Collectors.toList());
 
@@ -38,10 +39,7 @@ public class BoardService {
         Optional<BoardEntity> results = boardRepository.findById(seq);
         return results.isPresent() ? results.map(boardEntity -> {
             BoardResult boardResult = new BoardResult();
-            boardResult.setContent(boardEntity.getContent());
-            boardResult.setUsername(boardEntity.getUsername());
-            boardResult.setTitle(boardEntity.getTitle());
-            boardResult.setSeq(boardEntity.getSeq());
+            modelMapper.map(boardEntity, boardResult);
             return boardResult;
         }).get() : null;
     }
@@ -50,9 +48,7 @@ public class BoardService {
     public void edit(BoardParam param) {
         Optional<BoardEntity> getEntity = boardRepository.findById(param.getSeq());
         getEntity.ifPresent(entity -> {
-            entity.setTitle(param.getTitle());
-            entity.setContent(param.getContent());
-            entity.setUsername(param.getUsername());
+            modelMapper.map(param, entity);
             boardRepository.save(entity);
         });
     }
@@ -60,9 +56,7 @@ public class BoardService {
     @Transactional
     public void add(BoardParam param) {
         BoardEntity entity = new BoardEntity();
-        entity.setUsername(param.getUsername());
-        entity.setContent(param.getContent());
-        entity.setTitle(param.getTitle());
+        modelMapper.map(param, entity);
         boardRepository.save(entity);
     }
 
