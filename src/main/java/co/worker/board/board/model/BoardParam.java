@@ -1,5 +1,7 @@
 package co.worker.board.board.model;
 
+import co.worker.board.user.model.UserEntity;
+import co.worker.board.user.model.UserParam;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +20,8 @@ public class BoardParam {
     Long seq;
     @NotEmpty
     String content;
-    @NotEmpty
-    String username;
+    @NotNull
+    UserEntity user;
     @NotEmpty
     String title;
 }

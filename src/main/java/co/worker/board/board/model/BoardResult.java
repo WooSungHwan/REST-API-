@@ -1,5 +1,7 @@
 package co.worker.board.board.model;
 
+import co.worker.board.user.model.UserEntity;
+import co.worker.board.user.model.UserResult;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +12,6 @@ import lombok.ToString;
 public class BoardResult {
     Long seq;
     String content;
-    String username;
+    UserEntity result;
     String title;
 }

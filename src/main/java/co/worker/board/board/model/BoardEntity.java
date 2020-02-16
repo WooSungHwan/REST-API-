@@ -1,24 +1,30 @@
 package co.worker.board.board.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import co.worker.board.user.model.UserEntity;
+import lombok.*;
+import javax.persistence.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "BoardEntity")
+@Builder
+@NoArgsConstructor
 public class BoardEntity {
     @Id
     @GeneratedValue
     Long seq;
     String content;
-    String username;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "UserEntity_seq")
+    UserEntity userEntity;
     String title;
+
+    public BoardEntity(Long seq, String content, UserEntity userEntity, String title){
+        this.seq = seq;
+        this.content = content;
+        this.userEntity = userEntity;
+        this.title = title;
+    }
 }
