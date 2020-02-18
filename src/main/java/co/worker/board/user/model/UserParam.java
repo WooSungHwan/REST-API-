@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
@@ -11,7 +14,10 @@ import lombok.ToString;
 @Builder
 public class UserParam {
     private Long seq;
+    @NotEmpty
     private String id;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String name;
 }

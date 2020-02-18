@@ -2,16 +2,13 @@ package co.worker.board.board.controller;
 
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.service.BoardService;
-import co.worker.board.configuration.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 @RestController
 @Validated

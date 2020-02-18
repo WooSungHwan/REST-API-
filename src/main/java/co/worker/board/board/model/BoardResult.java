@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Getter
 @Setter
 @ToString
@@ -14,4 +17,5 @@ public class BoardResult {
     String content;
     UserEntity result;
     String title;
+    LocalDateTime savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 }

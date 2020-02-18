@@ -26,7 +26,7 @@ public class BoardService {
     public List<BoardResult> getBoard(){
         List<BoardEntity> entityList = boardRepository.findAll();
         List<BoardResult> results = entityList.stream().map(boardEntity ->
-            entityToResultBoard(boardEntity, new BoardResult())
+                sourceToDestination(boardEntity, new BoardResult())
         ).collect(Collectors.toList());
 
         return results;
@@ -36,7 +36,7 @@ public class BoardService {
     public Object getBoard(Long seq){
         Optional<BoardEntity> results = boardRepository.findById(seq);
         return results.isPresent() ? results.map(
-                boardEntity -> entityToResultBoard(boardEntity, new BoardResult())
+                boardEntity -> sourceToDestination(boardEntity, new BoardResult())
         ).get() : null;
     }
 
@@ -51,9 +51,7 @@ public class BoardService {
 
     @Transactional
     public void add(BoardParam param) {
-        BoardEntity entity = new BoardEntity();
-        modelMapper.map(param, entity);
-        boardRepository.save(entity);
+        boardRepository.save(sourceToDestination(param, new BoardEntity()));
     }
 
     @Transactional
@@ -61,9 +59,8 @@ public class BoardService {
         boardRepository.deleteById(seq);
     }
 
-    private BoardResult entityToResultBoard(BoardEntity source, BoardResult destination){
-        modelMapper.map(source, destination);
-        destination.setResult(source.getUserEntity()); //이부분 어떻게 할까..?
-        return destination;
+    private <R, T> T sourceToDestination(R source, T destinateion){
+        modelMapper.map(source, destinateion);
+        return destinateion;
     }
 }

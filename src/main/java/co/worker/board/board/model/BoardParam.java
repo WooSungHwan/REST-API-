@@ -10,6 +10,8 @@ import lombok.ToString;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -24,4 +26,5 @@ public class BoardParam {
     UserEntity user;
     @NotEmpty
     String title;
+    LocalDateTime savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 }
