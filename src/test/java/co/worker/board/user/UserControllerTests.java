@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,14 +40,14 @@ public class UserControllerTests {
     @Before
     public void insert(){
         for(int i =1; i<=10; i++){
-            UserEntity entity = UserEntity.builder().password("비밀번호"+i).name("이름"+i).id("아이디"+i).build();
+            UserEntity entity = UserEntity.builder().password("비밀번호"+i).name("이름"+i).id("아이디"+i).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
             userRepository.save(entity);
         }
     }
 
     @Test
     public void add() throws Exception {
-        UserParam param = UserParam.builder().id("아이디추가").name("이름추가").password("비밀번호추가").build();
+        UserParam param = UserParam.builder().id("아이디추가").name("이름추가").password("비밀번호추가").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         mockMvc.perform(post("/api/users/add")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -52,11 +55,13 @@ public class UserControllerTests {
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        this.getUserAll();
     }
 
     @Test
     public void edit() throws Exception{
-        UserParam param = UserParam.builder().id("아이디수정").name("이름수정").password("비밀번호수정").build();
+        UserParam param = UserParam.builder().id("아이디수정").name("이름수정").password("비밀번호수정").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         mockMvc.perform(put("/api/users/edit/3")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

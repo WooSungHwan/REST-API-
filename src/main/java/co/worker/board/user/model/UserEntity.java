@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,5 +22,5 @@ public class UserEntity {
     private String id;
     private String name;
     private String password;
-
+    private LocalDateTime savedTime;
 }

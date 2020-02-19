@@ -5,7 +5,8 @@ import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,16 +17,19 @@ import java.util.stream.Collectors;
 @Service
 public class BoardService {
 
-    @Autowired
     private BoardRepository boardRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
 
+    public BoardService(BoardRepository boardRepository, ModelMapper modelMapper){
+        this.boardRepository = boardRepository;
+        this.modelMapper = modelMapper;
+    }
+
     @Transactional
-    public List<BoardResult> getBoard(){
-        List<BoardEntity> entityList = boardRepository.findAll();
-        List<BoardResult> results = entityList.stream().map(boardEntity ->
+    public List<BoardResult> getBoard(Integer page){
+        Page<BoardEntity> boards = boardRepository.findAll(PageRequest.of(page, 10));
+
+        List<BoardResult> results = boards.getContent().stream().map(boardEntity ->
                 sourceToDestination(boardEntity, new BoardResult())
         ).collect(Collectors.toList());
 

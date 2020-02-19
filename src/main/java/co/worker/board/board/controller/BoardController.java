@@ -19,12 +19,12 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping(
-            value = "/all",
+            value = "/list/{page}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Object getAll() throws Exception{
-        return boardService.getBoard();
+    public Object getList(@PathVariable("page") Integer page) throws Exception{
+        return boardService.getBoard(page);
     }
 
     @GetMapping(

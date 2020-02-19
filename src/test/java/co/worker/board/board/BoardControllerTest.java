@@ -35,7 +35,7 @@ public class BoardControllerTest {
 
     @Before
     public void insertBoard(){
-        for(int i =1; i<=10; i++){
+        for(int i =1; i<=20; i++){
             UserEntity user = UserEntity.builder().id("doqndnf"+i).name("유저"+i).password("tjdghks"+i+"!").build();
             BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user).build();
             boardRepository.save(boardEntity);
@@ -83,7 +83,7 @@ public class BoardControllerTest {
 
     @Test
     public void getBoard() throws Exception {
-        mockMvc.perform(get("/api/boards/all")
+        mockMvc.perform(get("/api/boards/list/1")
             .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status().isOk());
