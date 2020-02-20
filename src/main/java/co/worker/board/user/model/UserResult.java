@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class UserResult {
     private Long seq;
     private String id;
-    private String password;
     private String name;
     private LocalDateTime savedTime;
 }

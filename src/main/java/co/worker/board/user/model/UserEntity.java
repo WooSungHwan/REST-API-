@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Table(name = "UserEntity")
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserEntity {
     @Id @GeneratedValue
     private Long seq;
@@ -23,4 +23,12 @@ public class UserEntity {
     private String name;
     private String password;
     private LocalDateTime savedTime;
+
+    public UserEntity(Long seq, String id, String name, String password, LocalDateTime savedTime){
+        this.seq = seq;
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 }

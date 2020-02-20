@@ -4,6 +4,7 @@ import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
+import co.worker.board.user.model.UserResult;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,10 +39,14 @@ public class BoardService {
 
     @Transactional
     public Object getBoard(Long seq){
-        Optional<BoardEntity> results = boardRepository.findById(seq);
-        return results.isPresent() ? results.map(
-                boardEntity -> sourceToDestination(boardEntity, new BoardResult())
-        ).get() : null;
+        Optional<BoardEntity> board = boardRepository.findById(seq);
+        BoardResult result = new BoardResult();
+
+        result = Optional.ofNullable(board).isPresent() ? sourceToDestination(board.get(), result) : null;
+        if (result != null){
+            result.setUser(sourceToDestination(board.get().getUserEntity(),new UserResult()));
+        }
+        return result;
     }
 
     @Transactional

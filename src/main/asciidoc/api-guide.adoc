@@ -1,0 +1,12 @@
+= Board
+
+== Board 조회
+
+include::{snippets}/board-controller-test/get-board-one2/curl-request.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/http-request.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/http-response.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/httpie-request.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/path-parameters.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/request-body.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/response-body.adoc[]
+include::{snippets}/board-controller-test/get-board-one2/response-fields.adoc[]

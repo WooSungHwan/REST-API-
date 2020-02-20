@@ -15,7 +15,7 @@ import java.time.ZoneId;
 public class BoardResult {
     Long seq;
     String content;
-    UserEntity result;
+    UserResult user;
     String title;
-    LocalDateTime savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    LocalDateTime savedTime;
 }
