@@ -5,6 +5,8 @@ import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
 import co.worker.board.user.model.UserResult;
+import co.worker.board.util.Validate;
+import co.worker.board.util.Word;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,13 +42,12 @@ public class BoardService {
     @Transactional
     public Object getBoard(Long seq){
         Optional<BoardEntity> board = boardRepository.findById(seq);
-        BoardResult result = new BoardResult();
-
-        result = Optional.ofNullable(board).isPresent() ? sourceToDestination(board.get(), result) : null;
-        if (result != null){
+        if (Optional.ofNullable(board).isPresent()){
+            BoardResult result = sourceToDestination(board.get(), new BoardResult());
             result.setUser(sourceToDestination(board.get().getUserEntity(),new UserResult()));
+            return result;
         }
-        return result;
+        return Word.NO_RESULT_BOARD_MSG;
     }
 
     @Transactional
@@ -65,8 +66,11 @@ public class BoardService {
 
     @Transactional
     public void delete(Long seq) {
+        boolean isExist = boardRepository.findById(seq).isPresent();
+        Validate.isTrue(isExist, Word.NO_RESULT_BOARD_MSG);
         boardRepository.deleteById(seq);
     }
+
 
     private <R, T> T sourceToDestination(R source, T destinateion){
         modelMapper.map(source, destinateion);

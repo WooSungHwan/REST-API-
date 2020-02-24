@@ -10,16 +10,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -80,8 +80,8 @@ public class BoardControllerTest {
                 .build();
 
         mockMvc.perform(post("/api/boards/add")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -91,7 +91,7 @@ public class BoardControllerTest {
 
     @Test
     public void editBoard() throws Exception{
-        UserEntity user = UserEntity.builder().id("addId").name("유저추가").password("비밀번호").build();
+        UserEntity user = UserEntity.builder().id("editId").name("유저수정").password("비밀번호").build();
 
         BoardParam param = BoardParam.builder()
                 .content("수정내용")
@@ -99,21 +99,64 @@ public class BoardControllerTest {
                 .user(user)
                 .build();
 
-        mockMvc.perform(put("/api/boards/3")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(put("/api/boards/{seq}",3)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
-                .andExpect(status().isOk());
-        this.getBoard();
+                .andExpect(status().isOk())
+                .andDo(document.document(
+                        pathParameters(
+                                parameterWithName("seq").description("게시판 순번")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("Http 상태값"),
+                                fieldWithPath("message").description("성공유무 메시지"),
+                                fieldWithPath("result").description("결과값")
+                        )
+                ))
+                .andExpect(jsonPath("$.code", is(notNullValue())))
+                .andExpect(jsonPath("$.message", is(notNullValue())))
+        ;
+
     }
 
     @Test
     public void getBoard() throws Exception {
-        mockMvc.perform(get("/api/boards/list/1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mockMvc.perform(get("/api/boards/list/{page}",1)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document.document(
+                        pathParameters(
+                                parameterWithName("page").description("페이지 넘버")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("Http 상태값"),
+                                fieldWithPath("message").description("성공유무 메시지"),
+                                fieldWithPath("result[].seq").description("게시판 순번"),
+                                fieldWithPath("result[].content").description("게시판 글내용"),
+                                fieldWithPath("result[].title").description("게시판 제목"),
+                                fieldWithPath("result[].user.seq").description("게시판 작성자 순번"),
+                                fieldWithPath("result[].user.id").description("게시판 작성자 아이디"),
+                                fieldWithPath("result[].user.name").description("게시판 작성자명"),
+                                fieldWithPath("result[].user.savedTime").description("게시판 작성자 가입일"),
+                                fieldWithPath("result[].savedTime").description("게시판 등록일")
+                        )
+                ))
+                .andExpect(jsonPath("$.code", is(notNullValue())))
+                .andExpect(jsonPath("$.message", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].seq", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].content", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].title", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.seq", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.id", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.name", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.savedTime", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].savedTime", is(notNullValue())))
+        ;
+
     }
 
     @Test
@@ -164,7 +207,8 @@ public class BoardControllerTest {
     @Test
     public void deleteBoardOne() throws Exception{
         mockMvc.perform(delete("/api/boards/3")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk());
         this.getBoard();
@@ -179,8 +223,8 @@ public class BoardControllerTest {
         BoardParam param = BoardParam.builder().title("title").content("").user(user).build(); // content not empty
 
         mockMvc.perform(post("/api/boards/add")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -190,8 +234,8 @@ public class BoardControllerTest {
     public void board_BadRequest_getOne() throws Exception{ // 문제 수정해야됨.
         // 400이 나와야하는데 200이 나옴. -> ok메소드를 실행해서 그럼 -> 오류 -> 400이 나오도록 수정.
         mockMvc.perform(get("/api/boards/-1")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -202,8 +246,8 @@ public class BoardControllerTest {
         //BoardParam param = BoardParam.builder().content("test").title("test").user(user).build(); // seq min 0
         //UserEntity user = UserEntity.builder().id("addId").name("유저추가").password("비밀번호").build();
         mockMvc.perform(put("/api/boards/0")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

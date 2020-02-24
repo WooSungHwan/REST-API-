@@ -7,9 +7,11 @@ import co.worker.board.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -34,12 +36,20 @@ public class UserService {
 
     public Object get(Long seq) {
         Optional<UserEntity> user = userRepository.findById(seq);
-        return user.isPresent() ? user.get() : null;
+        if(Optional.ofNullable(user).isPresent()){
+            return user.map(userEntity -> sourceToDestinationTypeCasting(userEntity, new UserResult()));
+        }
+        return null;
     }
 
     public Object getAll() {
         List<UserEntity> users = userRepository.findAll();
-        return users;
+
+        if (Optional.ofNullable(users).isPresent()) {
+            return users.stream().map(userEntity -> sourceToDestinationTypeCasting(userEntity, new UserResult())
+            ).collect(Collectors.toList());
+        }
+        return null;
     }
 
     @Transactional

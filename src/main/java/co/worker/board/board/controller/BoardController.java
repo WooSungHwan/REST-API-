@@ -50,7 +50,7 @@ public class BoardController {
         return null;
     }
 
-    @DeleteMapping(value = "/{seq}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{seq}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object delete(@PathVariable("seq") @Min(1) Long seq) throws Exception{
         boardService.delete(seq);
         return null;

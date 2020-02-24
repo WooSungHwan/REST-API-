@@ -1,6 +1,8 @@
 package co.worker.board.user.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -14,5 +16,7 @@ public class UserResult {
     private Long seq;
     private String id;
     private String name;
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH24:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
     private LocalDateTime savedTime;
 }
