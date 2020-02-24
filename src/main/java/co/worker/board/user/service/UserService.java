@@ -4,6 +4,8 @@ import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserParam;
 import co.worker.board.user.model.UserResult;
 import co.worker.board.user.repository.UserRepository;
+import co.worker.board.util.Validate;
+import co.worker.board.util.Word;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -46,14 +48,18 @@ public class UserService {
         List<UserEntity> users = userRepository.findAll();
 
         if (Optional.ofNullable(users).isPresent()) {
-            return users.stream().map(userEntity -> sourceToDestinationTypeCasting(userEntity, new UserResult())
-            ).collect(Collectors.toList());
+            return users.stream()
+                        .map(userEntity -> sourceToDestinationTypeCasting(userEntity, new UserResult()))
+                        .collect(Collectors.toList());
         }
         return null;
     }
 
     @Transactional
     public void delete(Long seq) {
+        Optional<UserEntity> userEntity = userRepository.findById(seq);
+        Validate.isTrue(userEntity.isPresent(), Word.NO_RESLT_USER_MSG);
+
         userRepository.deleteById(seq);
     }
 
