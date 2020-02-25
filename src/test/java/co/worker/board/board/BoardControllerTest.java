@@ -100,6 +100,7 @@ public class BoardControllerTest {
                             fieldWithPath("title").type(JsonFieldType.STRING).description("글 제목"),
                             fieldWithPath("savedTime").type(JsonFieldType.STRING).description("글 작성일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss")),
                             fieldWithPath("user.seq").type(JsonFieldType.NULL).description("유저 시퀀스"),
+                            fieldWithPath("user.password").type(JsonFieldType.STRING).description("유저 패스워드"),
                             fieldWithPath("user.id").type(JsonFieldType.STRING).description("유저 아이디"),
                             fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
                             fieldWithPath("user.savedTime").type(JsonFieldType.STRING).description("유저 가입일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss"))
@@ -112,7 +113,6 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.code", is(notNullValue())))
                 .andExpect(jsonPath("$.message", is(notNullValue())))
         ;
-        this.getBoard();
     }
 
     @Test
@@ -166,6 +166,7 @@ public class BoardControllerTest {
                                 fieldWithPath("result[].title").description("게시판 제목"),
                                 fieldWithPath("result[].user.seq").description("게시판 작성자 순번"),
                                 fieldWithPath("result[].user.id").description("게시판 작성자 아이디"),
+                                fieldWithPath("result[].user.password").description("게시판 작성자 비밀번호"),
                                 fieldWithPath("result[].user.name").description("게시판 작성자명"),
                                 fieldWithPath("result[].user.savedTime").description("게시판 작성자 가입일"),
                                 fieldWithPath("result[].savedTime").description("게시판 등록일")
@@ -178,6 +179,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result[*].title", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.seq", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.id", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.name", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].savedTime", is(notNullValue())))
@@ -213,6 +215,7 @@ public class BoardControllerTest {
                                 fieldWithPath("result.title").description("The Board`s title"),
                                 fieldWithPath("result.user.seq").description("The Board`s user seq"),
                                 fieldWithPath("result.user.id").description("The Board`s user id"),
+                                fieldWithPath("result.user.password").description("The Board`s user password"),
                                 fieldWithPath("result.user.name").description("The Board`s user name"),
                                 fieldWithPath("result.user.savedTime").description("The Board`s user regdate"),
                                 fieldWithPath("result.savedTime").description("The Board`s regdate")
@@ -224,6 +227,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result.user.seq", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.id", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.name", is(notNullValue())))
+                .andExpect(jsonPath("$.result.user.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result.title", is(notNullValue())))
                 .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))

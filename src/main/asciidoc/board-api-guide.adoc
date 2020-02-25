@@ -22,3 +22,51 @@ include::{snippets}/board-controller-test/get-board/path-parameters.adoc[]
 include::{snippets}/board-controller-test/get-board/request-body.adoc[]
 include::{snippets}/board-controller-test/get-board/response-body.adoc[]
 include::{snippets}/board-controller-test/get-board/response-fields.adoc[]
+
+
+== Board 등록 (addBoard)
+
+include::{snippets}/board-controller-test/add-board/curl-request.adoc[]
+include::{snippets}/board-controller-test/add-board/http-request.adoc[]
+include::{snippets}/board-controller-test/add-board/http-response.adoc[]
+include::{snippets}/board-controller-test/add-board/httpie-request.adoc[]
+include::{snippets}/board-controller-test/add-board/request-body.adoc[]
+include::{snippets}/board-controller-test/add-board/request-fields.adoc[]
+include::{snippets}/board-controller-test/add-board/response-body.adoc[]
+include::{snippets}/board-controller-test/add-board/response-fields.adoc[]
+
+
+== Board 수정(editBoard)
+
+include::{snippets}/board-controller-test/edit-board/curl-request.adoc[]
+include::{snippets}/board-controller-test/edit-board/http-request.adoc[]
+include::{snippets}/board-controller-test/edit-board/http-response.adoc[]
+include::{snippets}/board-controller-test/edit-board/httpie-request.adoc[]
+include::{snippets}/board-controller-test/edit-board/path-parameters.adoc[]
+include::{snippets}/board-controller-test/edit-board/request-body.adoc[]
+include::{snippets}/board-controller-test/edit-board/response-body.adoc[]
+include::{snippets}/board-controller-test/edit-board/response-fields.adoc[]
+
+
+== Board 삭제(deleteBoardOne)
+
+include::{snippets}/board-controller-test/delete-board-one/curl-request.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/http-request.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/http-response.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/httpie-request.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/path-parameters.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/request-body.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/response-body.adoc[]
+include::{snippets}/board-controller-test/delete-board-one/response-fields.adoc[]
+
+
+== Board 삭제(시퀀스 없는 경우)
+
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/curl-request.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/http-request.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/http-response.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/httpie-request.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/path-parameters.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/request-body.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/response-body.adoc[]
+include::{snippets}/board-controller-test/board_delete_not_exist_seq/response-fields.adoc[]
