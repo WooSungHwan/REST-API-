@@ -16,7 +16,7 @@ public class UserResult {
     private Long seq;
     private String id;
     private String name;
-    //@DateTimeFormat(pattern = "yyyy-MM-dd HH24:mm:ss")
+    private String password;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
     private LocalDateTime savedTime;
 }

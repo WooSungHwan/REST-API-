@@ -23,7 +23,7 @@ public class BoardParam {
     @NotEmpty
     String content;
     @NotNull
-    UserEntity user;
+    UserParam user;
     @NotEmpty
     String title;
     LocalDateTime savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));

@@ -4,35 +4,38 @@ import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.user.model.UserEntity;
+import co.worker.board.user.model.UserParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,8 +50,12 @@ public class BoardControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Rule public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation(); // (1)
-    @Autowired private WebApplicationContext context;
+    @Rule
+    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation(); // (1)
+
+    @Autowired
+    private WebApplicationContext context;
+
     private RestDocumentationResultHandler document;
 
 
@@ -63,20 +70,21 @@ public class BoardControllerTest {
                 .alwaysDo(document).build();
 
         for(int i =1; i<=20; i++){
-            UserEntity user = UserEntity.builder().id("doqndnf"+i).name("유저"+i).password("tjdghks"+i+"!").build();
-            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user).build();
+            UserEntity user = UserEntity.builder().id("doqndnf"+i).name("유저"+i).password("tjdghks"+i+"!").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
             boardRepository.save(boardEntity);
         }
     }
 
     @Test
     public void addBoard() throws Exception {
-        UserEntity user = UserEntity.builder().id("addId").name("유저추가").password("비밀번호").build();
+        UserParam user = UserParam.builder().id("addId").name("유저추가").password("비밀번호").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         BoardParam param = BoardParam.builder()
                 .content("추가내용")
                 .title("추가제목")
                 .user(user)
+                .savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         mockMvc.perform(post("/api/boards/add")
@@ -85,18 +93,36 @@ public class BoardControllerTest {
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andReturn();
+                .andDo(document.document(
+                    requestFields(
+                            fieldWithPath("seq").type(JsonFieldType.NULL).description("글 번호"),
+                            fieldWithPath("content").type(JsonFieldType.STRING).description("글 내용"),
+                            fieldWithPath("title").type(JsonFieldType.STRING).description("글 제목"),
+                            fieldWithPath("savedTime").type(JsonFieldType.STRING).description("글 작성일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss")),
+                            fieldWithPath("user.seq").type(JsonFieldType.NULL).description("유저 시퀀스"),
+                            fieldWithPath("user.id").type(JsonFieldType.STRING).description("유저 아이디"),
+                            fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
+                            fieldWithPath("user.savedTime").type(JsonFieldType.STRING).description("유저 가입일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss"))
+                    ),
+                    responseFields(
+                            fieldWithPath("code").type(JsonFieldType.NUMBER).description("결과코드(200 : 성공)"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"),
+                            fieldWithPath("result").type(JsonFieldType.NULL).description("결과 객체")
+                    )))
+                .andExpect(jsonPath("$.code", is(notNullValue())))
+                .andExpect(jsonPath("$.message", is(notNullValue())))
+        ;
         this.getBoard();
     }
 
     @Test
     public void editBoard() throws Exception{
-        UserEntity user = UserEntity.builder().id("editId").name("유저수정").password("비밀번호").build();
+        UserParam user = UserParam.builder().id("editId").name("유저수정").password("비밀번호").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         BoardParam param = BoardParam.builder()
                 .content("수정내용")
                 .title("수정제목")
-                .user(user)
+                .user(user).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         mockMvc.perform(put("/api/boards/{seq}",3)
@@ -110,9 +136,9 @@ public class BoardControllerTest {
                                 parameterWithName("seq").description("게시판 순번")
                         ),
                         responseFields(
-                                fieldWithPath("code").description("Http 상태값"),
-                                fieldWithPath("message").description("성공유무 메시지"),
-                                fieldWithPath("result").description("결과값")
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("Http 상태값"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("성공유무 메시지"),
+                                fieldWithPath("result").type(JsonFieldType.NULL).description("결과값")
                         )
                 ))
                 .andExpect(jsonPath("$.code", is(notNullValue())))
@@ -206,12 +232,25 @@ public class BoardControllerTest {
 
     @Test
     public void deleteBoardOne() throws Exception{
-        mockMvc.perform(delete("/api/boards/3")
+        mockMvc.perform(delete("/api/boards/{seq}", 3)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
-                .andExpect(status().isOk());
-        this.getBoard();
+                .andExpect(status().isOk())
+                .andDo(document.document(
+                        pathParameters(
+                                parameterWithName("seq").description("글 시퀀스")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("결과코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"),
+                                fieldWithPath("result").type(JsonFieldType.NULL).description("결과값")
+                        )
+                ))
+                .andExpect(jsonPath("$.code", is(notNullValue())))
+                .andExpect(jsonPath("$.message", is(notNullValue())))
+        ;
+
     }
 
     //Bad_Request 테스트
@@ -219,7 +258,7 @@ public class BoardControllerTest {
     public void board_BadRequest_add() throws Exception{
         //BoardParam param = BoardParam.builder().content("test").title("test").build(); //username not null
 
-        UserEntity user = UserEntity.builder().id("addId").name("유저추가").password("비밀번호").build();
+        UserParam user = UserParam.builder().id("addId").name("유저추가").password("비밀번호").build();
         BoardParam param = BoardParam.builder().title("title").content("").user(user).build(); // content not empty
 
         mockMvc.perform(post("/api/boards/add")
@@ -244,13 +283,34 @@ public class BoardControllerTest {
     public void board_BadRequest_edit() throws Exception {
         BoardParam param = BoardParam.builder().content("test").title("test").build(); //  username null
         //BoardParam param = BoardParam.builder().content("test").title("test").user(user).build(); // seq min 0
-        //UserEntity user = UserEntity.builder().id("addId").name("유저추가").password("비밀번호").build();
+        //UserParam user = UserParam.builder().id("addId").name("유저추가").password("비밀번호").build();
         mockMvc.perform(put("/api/boards/0")
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(param)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void board_delete_not_exist_seq() throws Exception{
+        mockMvc.perform(delete("/api/boards/{seq}",3000)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document.document(
+                        pathParameters(
+                                parameterWithName("seq").description("글 시퀀스")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("결과코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+                        )
+                ))
+                .andExpect(jsonPath("$.code",is(notNullValue())))
+                .andExpect(jsonPath("$.message",is(notNullValue())))
+        ;
     }
 
 }
