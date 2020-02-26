@@ -18,7 +18,7 @@ import java.time.ZoneId;
 public class UserParam {
     private Long seq;
     @NotEmpty
-    private String id;
+    private String userId;
     @NotEmpty
     private String password;
     @NotEmpty

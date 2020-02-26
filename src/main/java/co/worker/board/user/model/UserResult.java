@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class UserResult {
     private Long seq;
-    private String id;
+    private String userId;
     private String name;
     private String password;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")

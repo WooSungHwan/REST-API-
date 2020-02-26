@@ -3,7 +3,6 @@ package co.worker.board.user;
 import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserParam;
 import co.worker.board.user.repository.UserRepository;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -13,11 +12,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.snippet.Attributes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -55,6 +54,9 @@ public class UserControllerTests {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
 
@@ -73,14 +75,14 @@ public class UserControllerTests {
                 .alwaysDo(document).build();
 
         for(int i =1; i<=10; i++){
-            UserEntity entity = UserEntity.builder().password("비밀번호"+i).name("이름"+i).id("아이디"+i).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+            UserEntity entity = UserEntity.builder().password(passwordEncoder.encode("비밀번호"+i)).name("이름"+i).userId("아이디"+i).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
             userRepository.save(entity);
         }
     }
 
     @Test
     public void add() throws Exception {
-        UserParam param = UserParam.builder().id("아이디추가").name("이름추가").password("비밀번호추가").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam param = UserParam.builder().userId("아이디추가").name("이름추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         mockMvc.perform(post("/api/users/add")
                 .contentType("application/json;charset=utf-8")
@@ -91,7 +93,7 @@ public class UserControllerTests {
                 .andDo(document.document(
                     requestFields(
                             fieldWithPath("seq").type(JsonFieldType.NULL).description("유저 시퀀스"),
-                            fieldWithPath("id").type(JsonFieldType.STRING).description("유저 아이디"),
+                            fieldWithPath("userId").type(JsonFieldType.STRING).description("유저 아이디"),
                             fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
                             fieldWithPath("password").type(JsonFieldType.STRING).description("유저 비밀번"),
                             fieldWithPath("savedTime").type(JsonFieldType.STRING).description("유저 가입일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss"))
@@ -108,7 +110,7 @@ public class UserControllerTests {
 
     @Test
     public void edit() throws Exception{
-        UserParam param = UserParam.builder().id("아이디수정").name("이름수정").password("비밀번호수정").savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam param = UserParam.builder().userId("아이디수정").name("이름수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 
         mockMvc.perform(put("/api/users/edit/{seq}", 3)
                 .contentType("application/json;charset=utf-8")
@@ -145,7 +147,7 @@ public class UserControllerTests {
                                 fieldWithPath("code").type(JsonFieldType.NUMBER).description("Http 상태값"),
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("성공유무 메시지"),
                                 fieldWithPath("result.seq").type(JsonFieldType.NUMBER).description("유저 시퀀스"),
-                                fieldWithPath("result.id").type(JsonFieldType.STRING).description("유저 시퀀스"),
+                                fieldWithPath("result.userId").type(JsonFieldType.STRING).description("유저 시퀀스"),
                                 fieldWithPath("result.name").type(JsonFieldType.STRING).description("유저 시퀀스"),
                                 fieldWithPath("result.password").type(JsonFieldType.STRING).description("유저 시퀀스"),
                                 fieldWithPath("result.savedTime").type(JsonFieldType.STRING).description("유저 시퀀스").attributes(new Attributes.Attribute("format", "yyyy-MM-dd HH:mm:ss"))
@@ -153,7 +155,7 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.code", is(notNullValue())))
                 .andExpect(jsonPath("$.message", is(notNullValue())))
                 .andExpect(jsonPath("$.result.seq", is(notNullValue())))
-                .andExpect(jsonPath("$.result.id", is(notNullValue())))
+                .andExpect(jsonPath("$.result.userId", is(notNullValue())))
                 .andExpect(jsonPath("$.result.name", is(notNullValue())))
                 .andExpect(jsonPath("$.result.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))
