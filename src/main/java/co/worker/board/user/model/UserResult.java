@@ -19,4 +19,5 @@ public class UserResult {
     private String password;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
     private LocalDateTime savedTime;
+    private int role;
 }

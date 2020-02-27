@@ -24,4 +24,5 @@ public class UserParam {
     @NotEmpty
     private String name;
     private LocalDateTime savedTime;
+    private int role;
 }

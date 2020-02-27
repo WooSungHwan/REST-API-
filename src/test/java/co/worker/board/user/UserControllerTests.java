@@ -95,7 +95,8 @@ public class UserControllerTests {
                             fieldWithPath("seq").type(JsonFieldType.NULL).description("유저 시퀀스"),
                             fieldWithPath("userId").type(JsonFieldType.STRING).description("유저 아이디"),
                             fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
-                            fieldWithPath("password").type(JsonFieldType.STRING).description("유저 비밀번"),
+                            fieldWithPath("password").type(JsonFieldType.STRING).description("유저 비밀번호"),
+                            fieldWithPath("role").type(JsonFieldType.NUMBER).description("유저 ROLE 값."),
                             fieldWithPath("savedTime").type(JsonFieldType.STRING).description("유저 가입일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss"))
                     ),
                     responseFields(
@@ -106,6 +107,7 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.code", is(notNullValue())))
                 .andExpect(jsonPath("$.message", is(notNullValue())))
         ;
+        this.getUserAll();
     }
 
     @Test
@@ -150,6 +152,7 @@ public class UserControllerTests {
                                 fieldWithPath("result.userId").type(JsonFieldType.STRING).description("유저 시퀀스"),
                                 fieldWithPath("result.name").type(JsonFieldType.STRING).description("유저 시퀀스"),
                                 fieldWithPath("result.password").type(JsonFieldType.STRING).description("유저 시퀀스"),
+                                fieldWithPath("result.role").type(JsonFieldType.NUMBER).description("유저 ROLE 값"),
                                 fieldWithPath("result.savedTime").type(JsonFieldType.STRING).description("유저 시퀀스").attributes(new Attributes.Attribute("format", "yyyy-MM-dd HH:mm:ss"))
                         )))
                 .andExpect(jsonPath("$.code", is(notNullValue())))
@@ -157,6 +160,7 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.result.seq", is(notNullValue())))
                 .andExpect(jsonPath("$.result.userId", is(notNullValue())))
                 .andExpect(jsonPath("$.result.name", is(notNullValue())))
+                .andExpect(jsonPath("$.result.role", is(notNullValue())))
                 .andExpect(jsonPath("$.result.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))
         ;

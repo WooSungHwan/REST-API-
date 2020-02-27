@@ -15,7 +15,7 @@ import java.time.ZoneId;
 @NoArgsConstructor
 public class BoardEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long seq;
     String content;
     @ManyToOne(cascade = CascadeType.ALL)

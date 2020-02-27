@@ -81,7 +81,7 @@ public class BoardControllerTest {
 
     @Test
     public void addBoard() throws Exception {
-        UserParam user = UserParam.builder().userId("addId").name("유저추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam user = UserParam.builder().userId("addId").name("유저추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).role(0).build();
 
         BoardParam param = BoardParam.builder()
                 .content("추가내용")
@@ -106,6 +106,7 @@ public class BoardControllerTest {
                             fieldWithPath("user.password").type(JsonFieldType.STRING).description("유저 패스워드"),
                             fieldWithPath("user.userId").type(JsonFieldType.STRING).description("유저 아이디"),
                             fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
+                            fieldWithPath("user.role").type(JsonFieldType.NUMBER).description("유저 역할 값"),
                             fieldWithPath("user.savedTime").type(JsonFieldType.STRING).description("유저 가입일").attributes(new Attributes.Attribute("format","yyyy-MM-dd HH:mm:ss"))
                     ),
                     responseFields(
@@ -120,7 +121,7 @@ public class BoardControllerTest {
 
     @Test
     public void editBoard() throws Exception{
-        UserParam user = UserParam.builder().userId("editId").name("유저수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam user = UserParam.builder().userId("editId").name("유저수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).role(0).build();
 
         BoardParam param = BoardParam.builder()
                 .content("수정내용")
@@ -170,6 +171,7 @@ public class BoardControllerTest {
                                 fieldWithPath("result[].user.seq").description("게시판 작성자 순번"),
                                 fieldWithPath("result[].user.userId").description("게시판 작성자 아이디"),
                                 fieldWithPath("result[].user.password").description("게시판 작성자 비밀번호"),
+                                fieldWithPath("result[].user.role").description("게시판 작성자 역할 값"),
                                 fieldWithPath("result[].user.name").description("게시판 작성자명"),
                                 fieldWithPath("result[].user.savedTime").description("게시판 작성자 가입일"),
                                 fieldWithPath("result[].savedTime").description("게시판 등록일")
@@ -184,6 +186,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result[*].user.userId", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.name", is(notNullValue())))
+                .andExpect(jsonPath("$.result[*].user.role", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result[*].savedTime", is(notNullValue())))
         ;
@@ -192,7 +195,7 @@ public class BoardControllerTest {
 
     @Test
     public void getBoardOne1() throws Exception {
-        mockMvc.perform(get("/api/boards/{seq}", 1)
+        mockMvc.perform(get("/api/boards/{seq}", 2)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
@@ -201,7 +204,7 @@ public class BoardControllerTest {
 
     @Test
     public void getBoardOne2() throws Exception {
-        mockMvc.perform(get("/api/boards/{seq}", 1)
+        mockMvc.perform(get("/api/boards/{seq}", 2)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
@@ -220,6 +223,7 @@ public class BoardControllerTest {
                                 fieldWithPath("result.user.userId").description("The Board`s user id"),
                                 fieldWithPath("result.user.password").description("The Board`s user password"),
                                 fieldWithPath("result.user.name").description("The Board`s user name"),
+                                fieldWithPath("result.user.role").description("The Board`s user role value"),
                                 fieldWithPath("result.user.savedTime").description("The Board`s user regdate"),
                                 fieldWithPath("result.savedTime").description("The Board`s regdate")
                         )
@@ -230,6 +234,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result.user.seq", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.userId", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.name", is(notNullValue())))
+                .andExpect(jsonPath("$.result.user.role", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result.title", is(notNullValue())))
@@ -239,7 +244,7 @@ public class BoardControllerTest {
 
     @Test
     public void deleteBoardOne() throws Exception{
-        mockMvc.perform(delete("/api/boards/{seq}", 3)
+        mockMvc.perform(delete("/api/boards/{seq}", 4)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
