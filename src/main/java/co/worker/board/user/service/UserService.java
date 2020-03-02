@@ -32,6 +32,11 @@ public class UserService {
     }
 
     @Transactional
+    public void idcheck(String userId) {
+        Validate.isTrue(!userRepository.findByUserId(userId).isPresent(), "해당 아이디는 이미 사용중입니다.");
+    }
+
+    @Transactional
     public Object edit(UserParam param) {
         return userRepository.save(sourceToDestinationTypeCasting(param, new UserEntity()));
     }
@@ -67,4 +72,5 @@ public class UserService {
         modelMapper.map(source, destination);
         return destination;
     }
+
 }

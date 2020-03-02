@@ -111,6 +111,15 @@ public class UserControllerTests {
     }
 
     @Test
+    public void idcheck() throws Exception {
+        mockMvc.perform(get("/api/users/idcheck/doqndnffo")
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void edit() throws Exception{
         UserParam param = UserParam.builder().userId("아이디수정").name("이름수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
 

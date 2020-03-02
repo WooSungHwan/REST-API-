@@ -19,12 +19,12 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping(
-            value = "/list/{page}",
+            value = "/list/{page}/{size}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Object getList(@PathVariable("page") Integer page) throws Exception{
-        return boardService.getBoard(page);
+    public Object getList(@PathVariable("page") Integer page, @PathVariable("size") Integer size) throws Exception{
+        return boardService.getBoard(page, size);
     }
 
     @GetMapping(
@@ -34,6 +34,17 @@ public class BoardController {
     )
     public Object get(@PathVariable("seq") @Min(1) Long seq) throws Exception{
         return boardService.getBoard(seq);
+    }
+
+    @GetMapping(
+            value = "/user/{userSeq}/{page}/{size}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Object getByUserSeq(@PathVariable("userSeq") @Min(1) Long userSeq,
+                               @PathVariable("page") @Min(0) Integer page,
+                               @PathVariable("size") @Min(5) Integer size) throws Exception{
+        return boardService.getBoardByUserSeq(userSeq, page, size);
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)

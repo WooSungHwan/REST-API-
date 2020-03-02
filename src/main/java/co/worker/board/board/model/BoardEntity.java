@@ -18,7 +18,7 @@ public class BoardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long seq;
     String content;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "UserEntity_seq")
     UserEntity userEntity;
     String title;

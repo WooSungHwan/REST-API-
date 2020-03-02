@@ -5,6 +5,8 @@ import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserParam;
+import co.worker.board.user.repository.UserRepository;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -46,6 +49,9 @@ public class BoardControllerTest {
     MockMvc mockMvc;
     @Autowired
     BoardRepository boardRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -72,9 +78,17 @@ public class BoardControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).apply(documentationConfiguration(this.restDocumentation))
                 .alwaysDo(document).build();
 
+        userRepository.save(UserEntity.builder().userId("doqndnf").name("유저").password(passwordEncoder.encode("tjdghks1!")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
+        userRepository.save(UserEntity.builder().userId("doqndnf2").name("유저2").password(passwordEncoder.encode("tjdghks2@")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
+
         for(int i =1; i<=20; i++){
-            UserEntity user = UserEntity.builder().userId("doqndnf"+i).name("유저"+i).password(passwordEncoder.encode("tjdghks"+i+"!")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
-            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+            Optional<UserEntity> user = null;
+            if(i%2==0){
+                user = userRepository.findById(2L);
+            }else{
+                user = userRepository.findById(3L);
+            }
+            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
             boardRepository.save(boardEntity);
         }
     }
@@ -153,14 +167,15 @@ public class BoardControllerTest {
 
     @Test
     public void getBoard() throws Exception {
-        mockMvc.perform(get("/api/boards/list/{page}",1)
+        mockMvc.perform(get("/api/boards/list/{page}/{size}",1,10)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document.document(
                         pathParameters(
-                                parameterWithName("page").description("페이지 넘버")
+                                parameterWithName("page").description("페이지 넘버"),
+                                parameterWithName("size").description("페이지 크기")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("Http 상태값"),
@@ -194,12 +209,25 @@ public class BoardControllerTest {
     }
 
     @Test
-    public void getBoardOne1() throws Exception {
-        mockMvc.perform(get("/api/boards/{seq}", 2)
-                .contentType("application/json;charset=utf-8")
-                .accept("application/json;charset=utf-8"))
-                .andDo(print())
-                .andExpect(status().isOk());
+    public void getBoardPagingNotFound() throws Exception {
+            mockMvc.perform(get("/api/boards/list/{page}/{size}",20000, 10)
+                    .contentType("application/json;charset=utf-8")
+                    .accept("application/json;charset=utf-8"))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andDo(document.document(
+                            pathParameters(
+                                    parameterWithName("page").description("페이지 넘버"),
+                                    parameterWithName("size").description("페이징 개수")
+                            ),
+                            responseFields(
+                                    fieldWithPath("code").type(JsonFieldType.NUMBER).description("Http 상태값"),
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("성공유무 메시지")
+                            )
+                    ))
+                    .andExpect(jsonPath("$.code", is(notNullValue())))
+                    .andExpect(jsonPath("$.message", is(notNullValue())))
+            ;
     }
 
     @Test
@@ -239,6 +267,16 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result.user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result.title", is(notNullValue())))
                 .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))
+        ;
+    }
+
+    @Test
+    public void getBoardPagingByUserSeq() throws Exception{
+        mockMvc.perform(get("/api/boards/user/{user_seq}/{page}/{size}", 2,0,10)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
         ;
     }
 

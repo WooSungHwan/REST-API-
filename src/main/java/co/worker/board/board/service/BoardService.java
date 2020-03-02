@@ -4,7 +4,9 @@ import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
+import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserResult;
+import co.worker.board.user.repository.UserRepository;
 import co.worker.board.util.Validate;
 import co.worker.board.util.Word;
 import org.modelmapper.ModelMapper;
@@ -21,16 +23,20 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private BoardRepository boardRepository;
+    private UserRepository userRepository;
     private ModelMapper modelMapper;
 
-    public BoardService(BoardRepository boardRepository, ModelMapper modelMapper){
+    public BoardService(BoardRepository boardRepository, UserRepository userRepository, ModelMapper modelMapper){
         this.boardRepository = boardRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
     @Transactional
-    public List<BoardResult> getBoard(Integer page){
-        Page<BoardEntity> boards = boardRepository.findAll(PageRequest.of(page, 10));
+    public List<BoardResult> getBoard(Integer page, Integer size){
+        Page<BoardEntity> boards = boardRepository.findAll(PageRequest.of(page, size));
+
+        Validate.isTrue(!boards.isEmpty(), "결과가 없습니다.");
 
         List<BoardResult> results = boards.getContent().stream().map(boardEntity ->
                 sourceToDestination(boardEntity, new BoardResult())
@@ -48,6 +54,25 @@ public class BoardService {
             return result;
         }
         return Word.NO_RESULT_BOARD_MSG;
+    }
+
+    @Transactional
+    public Object getBoardByUserSeq(Long userSeq, Integer page, Integer size) {
+        //유저
+        Optional<UserEntity> user = userRepository.findById(userSeq);
+        Validate.isTrue(user.isPresent(), "해당 시퀀스의 유저가 존재하지 않습니다.");
+
+        //해당 유저의 게시물
+        List<BoardEntity> boards = boardRepository.findAll();
+        Page<BoardEntity> boardEntities = boardRepository.findByUserEntity(user.get(), PageRequest.of(page, size));
+        Validate.isTrue(!boardEntities.isEmpty(), "해당 게시물은 존재하지 않습니다.");
+
+        //가공
+        List<BoardResult> results = boardEntities.getContent().stream().map(boardEntity ->
+                sourceToDestination(boardEntity, new BoardResult())
+        ).collect(Collectors.toList());
+
+        return results;
     }
 
     @Transactional
@@ -76,4 +101,5 @@ public class BoardService {
         modelMapper.map(source, destinateion);
         return destinateion;
     }
+
 }

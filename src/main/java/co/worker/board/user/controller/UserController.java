@@ -25,6 +25,12 @@ public class UserController {
         return null;
     }
 
+    @GetMapping("/idcheck/{userId}")
+    public Object idcheck(@PathVariable("userId") String userId){
+        userService.idcheck(userId);
+        return "사용 가능한 아이디입니다.";
+    }
+
     @PutMapping("/edit/{seq}")
     public Object edit(@RequestBody @Valid UserParam param, @PathVariable("seq") @Min(1) Long seq){
         param.setSeq(seq);

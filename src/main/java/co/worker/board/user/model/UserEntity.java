@@ -2,6 +2,7 @@ package co.worker.board.user.model;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +17,10 @@ import java.util.Collection;
 @Setter
 @ToString
 @EqualsAndHashCode(of = "seq")
-@Entity
-@Table(name = "UserEntity")
 @Builder
 @NoArgsConstructor
+@Entity
+@Table(name = "UserEntity")
 public class UserEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
@@ -39,3 +40,4 @@ public class UserEntity {
     }
 
 }
+
