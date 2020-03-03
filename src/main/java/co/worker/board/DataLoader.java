@@ -3,6 +3,8 @@ package co.worker.board;
 import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.configuration.enums.AuthorityType;
+import co.worker.board.reply.model.ReplyEntity;
+import co.worker.board.reply.repository.ReplyRepository;
 import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -20,11 +22,13 @@ public class DataLoader implements ApplicationRunner {
     private UserRepository userRepository;
     private BoardRepository boardRepository;
     private PasswordEncoder passwordEncoder;
+    private ReplyRepository replyRepository;
 
-    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository){
+    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository, ReplyRepository replyRepository){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.boardRepository = boardRepository;
+        this.replyRepository = replyRepository;
     }
 
     @Override
@@ -44,14 +48,20 @@ public class DataLoader implements ApplicationRunner {
 
         //게시판 삽입(2번 3번 유저가 작성한 글 20개)
         for(int i =1; i<=20; i++){
-            Optional<UserEntity> user = null;
+            Optional<UserEntity> user;
+            ReplyEntity replyEntity;
+            BoardEntity boardEntity;
             if(i%2==0){
                 user = userRepository.findById(2L);
+                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
             }else{
                 user = userRepository.findById(3L);
+                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
             }
-            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
             boardRepository.save(boardEntity);
+            replyRepository.save(replyEntity);
         }
 
         System.out.println("==============================DataLoader End================================");

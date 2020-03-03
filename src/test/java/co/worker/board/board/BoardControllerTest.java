@@ -186,7 +186,8 @@ public class BoardControllerTest {
                                 fieldWithPath("result[].user.role").description("게시판 작성자 역할 값"),
                                 fieldWithPath("result[].user.name").description("게시판 작성자명"),
                                 fieldWithPath("result[].user.savedTime").description("게시판 작성자 가입일"),
-                                fieldWithPath("result[].savedTime").description("게시판 등록일")
+                                fieldWithPath("result[].savedTime").description("게시판 등록일"),
+                                fieldWithPath("result[].replies").description("게시판 댓글")
                         )
                 ))
                 .andExpect(jsonPath("$.code", is(notNullValue())))
@@ -234,7 +235,7 @@ public class BoardControllerTest {
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document.document(
+                /*.andDo(document.document(
                         pathParameters(
                                 parameterWithName("seq").description("Board`s seq")
                         ),
@@ -250,7 +251,8 @@ public class BoardControllerTest {
                                 fieldWithPath("result.user.name").description("The Board`s user name"),
                                 fieldWithPath("result.user.role").description("The Board`s user role value"),
                                 fieldWithPath("result.user.savedTime").description("The Board`s user regdate"),
-                                fieldWithPath("result.savedTime").description("The Board`s regdate")
+                                fieldWithPath("result.savedTime").description("The Board`s regdate"),
+                                fieldWithPath("result.replies").description("The Board`s replies")
                         )
                 ))
                 .andExpect(jsonPath("$.code", is(notNullValue())))
@@ -263,7 +265,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.result.user.password", is(notNullValue())))
                 .andExpect(jsonPath("$.result.user.savedTime", is(notNullValue())))
                 .andExpect(jsonPath("$.result.title", is(notNullValue())))
-                .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))
+                .andExpect(jsonPath("$.result.savedTime", is(notNullValue())))*/
         ;
     }
 

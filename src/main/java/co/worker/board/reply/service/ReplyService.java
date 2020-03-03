@@ -46,15 +46,14 @@ public class ReplyService {
         Validate.isTrue(replyEntity.isPresent(), "해당 시퀀스의 댓글은 존재하지 않습니다.");
     }
 
-    public Object getRepliesByBoardSeq(Long boardSeq, Integer page, Integer size) throws Exception {
+    public Object getRepliesByBoardSeq(Long boardSeq) throws Exception {
         //게시물
         Optional<BoardEntity> boardEntity = boardRepository.findById(boardSeq);
         Validate.isTrue(boardEntity.isPresent(), "해당 게시물은 존재하지 않습니다.");
 
-        Page<ReplyEntity> replyEntities = replyRepository.findByBoardSeq(boardSeq, PageRequest.of(0, 10));
+        List<ReplyEntity> replyEntities = replyRepository.findByBoardSeq(boardSeq);
 
-        List<ReplyResult> replies = replyEntities.getContent()
-                                                 .stream().map(replyEntity -> sourceToDestination(replyEntity, new ReplyResult()))
+        List<ReplyResult> replies = replyEntities.stream().map(replyEntity -> sourceToDestination(replyEntity, new ReplyResult()))
                                                  .collect(Collectors.toList());
 
         return replies;

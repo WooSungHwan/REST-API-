@@ -39,6 +39,6 @@ public class ReplyController {
     public Object getRepliesByBoardSeq(@Min(1) @PathVariable("seq") Long boardSeq,
                                        @Min(0) @PathVariable("page") Integer page,
                                        @Min(5) @PathVariable("size") Integer size) throws Exception {
-        return replyService.getRepliesByBoardSeq(boardSeq, page, size);
+        return replyService.getRepliesByBoardSeq(boardSeq);
     }
 }

@@ -4,6 +4,9 @@ import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.model.BoardParam;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.board.model.BoardResult;
+import co.worker.board.reply.model.ReplyEntity;
+import co.worker.board.reply.model.ReplyResult;
+import co.worker.board.reply.repository.ReplyRepository;
 import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserResult;
 import co.worker.board.user.repository.UserRepository;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +28,14 @@ public class BoardService {
 
     private BoardRepository boardRepository;
     private UserRepository userRepository;
+    private ReplyRepository replyRepository;
     private ModelMapper modelMapper;
 
-    public BoardService(BoardRepository boardRepository, UserRepository userRepository, ModelMapper modelMapper){
+    public BoardService(BoardRepository boardRepository, UserRepository userRepository, ReplyRepository replyRepository, ModelMapper modelMapper){
         this.boardRepository = boardRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.replyRepository = replyRepository;
     }
 
     @Transactional
@@ -51,6 +57,14 @@ public class BoardService {
         if (Optional.ofNullable(board).isPresent()){
             BoardResult result = sourceToDestination(board.get(), new BoardResult());
             result.setUser(sourceToDestination(board.get().getUserEntity(),new UserResult()));
+
+            List<ReplyEntity> replyEntities = replyRepository.findByBoardSeq(seq);
+            List<ReplyResult> replyResults = new ArrayList<>();
+            replyEntities.stream().forEach(replyEntity -> {
+                replyResults.add(sourceToDestination(replyEntity, new ReplyResult()));
+            });
+            result.setReplies(replyResults);
+
             return result;
         }
         return Word.NO_RESULT_BOARD_MSG;
