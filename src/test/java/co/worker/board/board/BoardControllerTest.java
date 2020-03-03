@@ -78,9 +78,6 @@ public class BoardControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).apply(documentationConfiguration(this.restDocumentation))
                 .alwaysDo(document).build();
 
-        userRepository.save(UserEntity.builder().userId("doqndnf").name("유저").password(passwordEncoder.encode("tjdghks1!")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
-        userRepository.save(UserEntity.builder().userId("doqndnf2").name("유저2").password(passwordEncoder.encode("tjdghks2@")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
-
         for(int i =1; i<=20; i++){
             Optional<UserEntity> user = null;
             if(i%2==0){

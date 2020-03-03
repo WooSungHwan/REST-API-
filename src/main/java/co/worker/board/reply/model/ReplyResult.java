@@ -1,24 +1,24 @@
-package co.worker.board.board.model;
+package co.worker.board.reply.model;
 
-import co.worker.board.reply.model.ReplyResult;
 import co.worker.board.user.model.UserResult;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class BoardResult {
+public class ReplyResult {
     private Long seq;
     private String content;
     private UserResult user;
-    private String title;
+    private Long boardSeq;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime savedTime;
-    private List<ReplyResult> replies;
+    private LocalDateTime saved_time;
 }

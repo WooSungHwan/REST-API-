@@ -1,9 +1,6 @@
 package co.worker.board.user.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +12,8 @@ import java.time.ZoneId;
 @Setter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserParam {
     private Long seq;
     @NotEmpty
