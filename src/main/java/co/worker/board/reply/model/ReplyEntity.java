@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.JoinColumnOrFormula;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.time.LocalDateTime;
 
 @Entity
