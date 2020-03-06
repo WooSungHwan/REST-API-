@@ -3,6 +3,8 @@ package co.worker.board;
 import co.worker.board.board.model.BoardEntity;
 import co.worker.board.board.repository.BoardRepository;
 import co.worker.board.configuration.enums.AuthorityType;
+import co.worker.board.favorite.model.FavoriteEntity;
+import co.worker.board.favorite.repository.FavoriteRepository;
 import co.worker.board.reply.model.ReplyEntity;
 import co.worker.board.reply.repository.ReplyRepository;
 import co.worker.board.user.model.UserEntity;
@@ -23,12 +25,14 @@ public class DataLoader implements ApplicationRunner {
     private BoardRepository boardRepository;
     private PasswordEncoder passwordEncoder;
     private ReplyRepository replyRepository;
+    private FavoriteRepository favoriteRepository;
 
-    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository, ReplyRepository replyRepository){
+    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository, ReplyRepository replyRepository, FavoriteRepository favoriteRepository){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.boardRepository = boardRepository;
         this.replyRepository = replyRepository;
+        this.favoriteRepository = favoriteRepository;
     }
 
     @Override
@@ -63,6 +67,10 @@ public class DataLoader implements ApplicationRunner {
             boardRepository.save(boardEntity);
             replyRepository.save(replyEntity);
         }
+
+        favoriteRepository.save(FavoriteEntity.builder().boardSeq(4L).userSeq(2L).build());
+        favoriteRepository.save(FavoriteEntity.builder().boardSeq(4L).userSeq(3L).build());
+        favoriteRepository.save(FavoriteEntity.builder().boardSeq(5L).userSeq(3L).build());
 
         System.out.println("==============================DataLoader End================================");
     }

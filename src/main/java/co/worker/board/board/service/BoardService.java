@@ -116,4 +116,11 @@ public class BoardService {
         return destinateion;
     }
 
+    public void deleteByUserSeq(Long seq) {
+        Optional<UserEntity> targetUser = userRepository.findById(seq);
+        List<BoardEntity> boardEntities = boardRepository.findByUserEntity(targetUser.get());
+        boardEntities.stream().forEach(boardEntity -> {
+            boardRepository.delete(boardEntity);
+        });
+    }
 }

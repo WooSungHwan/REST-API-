@@ -1,5 +1,9 @@
 package co.worker.board.user.service;
 
+import co.worker.board.board.service.BoardService;
+import co.worker.board.favorite.service.FavoriteService;
+import co.worker.board.reply.repository.ReplyRepository;
+import co.worker.board.reply.service.ReplyService;
 import co.worker.board.user.model.UserEntity;
 import co.worker.board.user.model.UserParam;
 import co.worker.board.user.model.UserResult;
@@ -20,10 +24,16 @@ public class UserService {
 
     private ModelMapper modelMapper;
     private UserRepository userRepository;
+    private ReplyService replyService;
+    private BoardService boardService;
+    private FavoriteService favoriteService;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper){
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, ReplyService replyService, BoardService boardService, FavoriteService favoriteService){
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.boardService = boardService;
+        this.replyService = replyService;
+        this.favoriteService = favoriteService;
     }
 
     @Transactional
@@ -64,6 +74,11 @@ public class UserService {
     public void delete(Long seq) {
         Optional<UserEntity> userEntity = userRepository.findById(seq);
         Validate.isTrue(userEntity.isPresent(), Word.NO_RESLT_USER_MSG);
+
+        //유저와 관련된 것 삭제해주기.(보드, 댓글, 즐겨찾기)
+        favoriteService.deleteByUserSeq(seq);
+        replyService.deleteByUserSeq(seq);
+        boardService.deleteByUserSeq(seq);
 
         userRepository.deleteById(seq);
     }

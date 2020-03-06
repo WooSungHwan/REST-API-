@@ -65,4 +65,7 @@ public class ReplyService {
         return destinateion;
     }
 
+    public void deleteByUserSeq(Long seq) {
+        replyRepository.deleteByUserSeq(seq);
+    }
 }

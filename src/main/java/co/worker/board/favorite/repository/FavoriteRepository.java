@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> {
 
@@ -15,4 +16,10 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> 
 
     @Query("SELECT 1 FROM BoardEntity") // * FROM BoardEntity WHERE seq IN (SELECT board)")
     List<BoardEntity> getFavoriteUsersBoards(Long userSeq);
+
+    Optional<FavoriteEntity> getFavoriteEntityByBoardSeqAndUserSeq(Long BoardSeq, Long UserSeq);
+
+    List<FavoriteEntity> getFavoriteEntitiesByBoardSeq(Long boardSeq);
+
+    void deleteByUserSeq(Long userSeq);
 }

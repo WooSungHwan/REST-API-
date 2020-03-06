@@ -176,7 +176,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void getUserAll() throws Exception{
+    public void getUserAll() throws Exception {
         mockMvc.perform(get("/api/users/all")
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
@@ -186,7 +186,7 @@ public class UserControllerTests {
 
     @Test
     public void deleteUser() throws Exception{
-        mockMvc.perform(delete("/api/users/{seq}", 4)
+        mockMvc.perform(delete("/api/users/{seq}", 3L)
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())

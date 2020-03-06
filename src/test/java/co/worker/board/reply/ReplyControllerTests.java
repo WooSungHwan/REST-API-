@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,7 +76,10 @@ public class ReplyControllerTests {
                 replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
             }else{
                 user = userRepository.findById(3L);
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
+                if(user.isPresent())
+                    replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
+                else
+                    continue;
             }
             replyRepository.save(replyEntity);
         }
@@ -103,7 +105,7 @@ public class ReplyControllerTests {
 
     @Test
     public void edit() throws Exception {
-        ReplyParam replyParam = TypeChange.sourceToDestination(replyRepository.findById(3L).get(), new ReplyParam());
+        ReplyParam replyParam = TypeChange.sourceToDestination(replyRepository.findById(4L).get(), new ReplyParam());
         replyParam.setContent("수정된 댓글");
         replyParam.setSaved_time(LocalDateTime.now(ZoneId.of(Word.KST)));
 

@@ -44,7 +44,7 @@ public class FavoriteControllerTests {
     private RestDocumentationResultHandler document;
 
     @Before
-    public void insert(){
+    public void setting(){
         this.document = document(
                 "{class-name}/{method-name}",
                 preprocessResponse(prettyPrint()));
@@ -65,14 +65,34 @@ public class FavoriteControllerTests {
     }
 
     @Test
+    public void deleteOne() throws Exception {
+        FavoriteParam param = FavoriteParam.builder().boardSeq(4L).userSeq(2L).build();
+        this.getAll();
+        mockMvc.perform(delete("/api/favorite/delete")
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8")
+                .content(objectMapper.writeValueAsString(param)))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.getAll();
+    }
+
+    @Test
     public void getAll() throws Exception {
         mockMvc.perform(get("/api/favorite/all")
                 .contentType("application/json;charset=utf-8")
                 .accept("application/json;charset=utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk());
-
     }
 
+    @Test
+    public void getFavoritesFromBoardSeq() throws Exception {
+        mockMvc.perform(get("/api/favorite/get/boarduser/{boardSeq}", 4)
+                .contentType("application/json;charset=utf-8")
+                .accept("application/json;charset=utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
 }

@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface ReplyRepository extends JpaRepository<ReplyEntity, Long> {
     List<ReplyEntity> findByBoardSeq(Long boardSeq);
+
+    void deleteByUserSeq(Long seq);
 }
