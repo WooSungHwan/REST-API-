@@ -1,17 +1,10 @@
 package co.worker.board.user.model;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Collection;
 
 @Getter
 @Setter

@@ -1,5 +1,6 @@
 package co.worker.board.user.model;
 
+import co.worker.board.configuration.enums.AuthorityType;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +28,7 @@ public class SecurityUser implements UserDetails {
 
     private void setAuthorites(Integer authority){
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(String.valueOf(authority)));
+        list.add(new SimpleGrantedAuthority("ROLE_"+AuthorityType.valueOf(authority).getName()));
         this.authorities = list;
     }
 

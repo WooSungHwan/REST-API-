@@ -2,6 +2,7 @@ package co.worker.board.user.controller;
 
 import co.worker.board.user.model.UserParam;
 import co.worker.board.user.service.UserService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

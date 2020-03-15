@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public enum AuthorityType {
 
-    ROLE_USER(0, "일반유저"),
-    ROLE_ADMIN(10, "슈퍼유저");
+    ROLE_USER(0, "user"),
+    ROLE_ADMIN(10, "admin");
 
     private final int value;
     private final String name;
