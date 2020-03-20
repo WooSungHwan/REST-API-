@@ -18,7 +18,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         System.out.println("----------------security config-----------------------");
-        http.authorizeRequests().antMatchers("/api/**");
+        http
+                .authorizeRequests().antMatchers("/api/**").authenticated();
+                //.antMatchers("/upload/**").authenticated();
+
 
         http
                 .cors()

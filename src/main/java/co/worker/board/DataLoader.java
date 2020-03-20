@@ -1,14 +1,14 @@
 package co.worker.board;
 
-import co.worker.board.board.model.BoardEntity;
-import co.worker.board.board.repository.BoardRepository;
+import co.worker.board.domain.board.model.BoardEntity;
+import co.worker.board.domain.board.repository.BoardRepository;
 import co.worker.board.configuration.enums.AuthorityType;
-import co.worker.board.favorite.model.FavoriteEntity;
-import co.worker.board.favorite.repository.FavoriteRepository;
-import co.worker.board.reply.model.ReplyEntity;
-import co.worker.board.reply.repository.ReplyRepository;
-import co.worker.board.user.model.UserEntity;
-import co.worker.board.user.repository.UserRepository;
+import co.worker.board.domain.favorite.model.FavoriteEntity;
+import co.worker.board.domain.favorite.repository.FavoriteRepository;
+import co.worker.board.domain.reply.model.ReplyEntity;
+import co.worker.board.domain.reply.repository.ReplyRepository;
+import co.worker.board.domain.user.model.UserEntity;
+import co.worker.board.domain.user.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

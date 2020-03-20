@@ -17,6 +17,7 @@ public class RestControllerExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ErrorResponse handlerRuntimeException(RuntimeException e, HttpServletRequest req){
         log.error("================= Handler RuntimeException =================");
+        e.printStackTrace();
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "RuntimeException : "+e.getMessage());
     }
 
