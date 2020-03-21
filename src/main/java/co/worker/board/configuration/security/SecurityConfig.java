@@ -19,8 +19,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         System.out.println("----------------security config-----------------------");
         http
-                .authorizeRequests().antMatchers("/api/**").authenticated();
-                //.antMatchers("/upload/**").authenticated();
+                .authorizeRequests().antMatchers("/api/**").authenticated()
+                .antMatchers("/upload/**").authenticated();
 
 
         http
@@ -30,16 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/", "/hello").permitAll();
+                .antMatchers("/", "/hello").permitAll().antMatchers("/my").authenticated();
 
-        //http.formLogin().loginPage().successHandler(signInSuccessHandler())
+        http.formLogin().successHandler(signInSuccessHandler());
 
 
 
         http.logout()
                 .logoutUrl("/logout")
+                .logoutSuccessUrl("/hello")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID", "auth_key")
                 .permitAll();
 
         System.out.println("----------------security config end -----------------------");

@@ -73,11 +73,11 @@ public class ReplyControllerTests {
             ReplyEntity replyEntity;
             if(i%2==0){
                 user = userRepository.findById(2L);
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
             }else{
                 user = userRepository.findById(3L);
                 if(user.isPresent())
-                    replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
+                    replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
                 else
                     continue;
             }
@@ -92,7 +92,7 @@ public class ReplyControllerTests {
                 .name(userEntity.getName()).password(userEntity.getPassword()).userId(userEntity.getUserId())
                 .savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).role(userEntity.getRole()).seq(userEntity.getSeq()).build();
 
-        ReplyParam replyParam = ReplyParam.builder().content("댓글추가합니다.").boardSeq(5L).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+        ReplyParam replyParam = ReplyParam.builder().content("댓글추가합니다.").boardSeq(5L).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .user(param).build();
 
         mockMvc.perform(post("/api/replies/add")
@@ -107,7 +107,7 @@ public class ReplyControllerTests {
     public void edit() throws Exception {
         ReplyParam replyParam = TypeChange.sourceToDestination(replyRepository.findById(4L).get(), new ReplyParam());
         replyParam.setContent("수정된 댓글");
-        replyParam.setSaved_time(LocalDateTime.now(ZoneId.of(Word.KST)));
+        replyParam.setSavedTime(LocalDateTime.now(ZoneId.of(Word.KST)));
 
         mockMvc.perform(put("/api/replies/edit")
                 .accept("application/json;charset=utf-8")

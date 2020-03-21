@@ -25,5 +25,5 @@ public class ReplyEntity {
     private UserEntity user;
     private Long boardSeq;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime saved_time;
+    private LocalDateTime savedTime;
 }

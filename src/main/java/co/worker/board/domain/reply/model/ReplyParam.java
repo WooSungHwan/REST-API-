@@ -23,5 +23,5 @@ public class ReplyParam {
     private UserParam user;
     @NotNull
     private Long boardSeq;
-    private LocalDateTime saved_time;
+    private LocalDateTime savedTime;
 }

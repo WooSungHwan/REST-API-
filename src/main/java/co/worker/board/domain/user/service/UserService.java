@@ -36,7 +36,8 @@ public class UserService {
 
     @Transactional
     public Object add(UserParam param) {
-        return userRepository.save(sourceToDestinationTypeCasting(param, new UserEntity()));
+        UserEntity user = userRepository.save(sourceToDestinationTypeCasting(param, new UserEntity()));
+        return sourceToDestinationTypeCasting(user, new UserResult());
     }
 
     @Transactional

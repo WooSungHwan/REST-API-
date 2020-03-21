@@ -2,6 +2,7 @@ package co.worker.board.domain.user.controller;
 
 import co.worker.board.domain.user.model.UserParam;
 import co.worker.board.domain.user.service.UserService;
+import co.worker.board.util.Word;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +22,13 @@ public class UserController {
 
     @PostMapping("/add")
     public Object add(@RequestBody @Valid UserParam param){
-        userService.add(param);
-        return null;
+        return userService.add(param);
     }
 
     @GetMapping("/idcheck/{userId}")
     public Object idcheck(@PathVariable("userId") String userId){
         userService.idcheck(userId);
-        return "사용 가능한 아이디입니다.";
+        return Word.USER_ID_AVAILABLE;
     }
 
     @PutMapping("/edit/{seq}")

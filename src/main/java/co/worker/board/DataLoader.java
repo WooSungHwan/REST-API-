@@ -58,11 +58,11 @@ public class DataLoader implements ApplicationRunner {
             if(i%2==0){
                 user = userRepository.findById(2L);
                 boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
             }else{
                 user = userRepository.findById(3L);
                 boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).saved_time(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
             }
             boardRepository.save(boardEntity);
             replyRepository.save(replyEntity);
