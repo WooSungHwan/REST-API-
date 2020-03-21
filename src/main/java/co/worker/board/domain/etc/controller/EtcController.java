@@ -23,9 +23,14 @@ public class EtcController {
     private EtcService etcService;
 
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object image(@RequestParam("files") ArrayList<MultipartFile> files, @AuthenticationPrincipal SecurityUser user) {
-        Validate.imagesValidation(files);
-        return etcService.image(files);
+    public Object image(@RequestParam("images") ArrayList<MultipartFile> images, @AuthenticationPrincipal SecurityUser user) {
+        Validate.imagesValidation(images);
+        return etcService.image(images);
     }
 
+    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object files(@RequestParam("files") ArrayList<MultipartFile> files, @AuthenticationPrincipal SecurityUser user) {
+        Validate.filesValidation(files);
+        return etcService.file(files);
+    }
 }

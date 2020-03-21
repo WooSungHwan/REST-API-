@@ -1,5 +1,6 @@
 package co.worker.board.util;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,14 +25,14 @@ public class Validate {
         }
     }
 
-    public static void imagesValidation(ArrayList<MultipartFile> files){
+    public static void imagesValidation(@NonNull ArrayList<MultipartFile> images){
         //확장자 -> jpg, jpeg, png, gif만 가능.
 
-        files.forEach(file -> {
-            if(file.getSize() == 0L)
+        images.forEach(image -> {
+            if(image.getSize() == 0L)
                 throw new RuntimeException("사이즈가 0인 이미지는 업로드할 수 없습니다.");
 
-            String fileName = file.getOriginalFilename();
+            String fileName = image.getOriginalFilename();
             String fileExtension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length());
 
             if (!allowFileExtension.contains(fileExtension)) {
@@ -39,6 +40,13 @@ public class Validate {
             }
         });
 
+    }
+
+    public static void filesValidation(@NonNull ArrayList<MultipartFile> files){
+        files.forEach(file -> {
+            if(file.getSize() == 0L)
+                throw new RuntimeException("사이즈가 0인 파일은 업로드할 수 없습니다.");
+        });
     }
 
 }
