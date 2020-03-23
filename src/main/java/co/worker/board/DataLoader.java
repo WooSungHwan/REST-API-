@@ -11,6 +11,7 @@ import co.worker.board.domain.todo.model.TodoData;
 import co.worker.board.domain.todo.repository.TodoRepository;
 import co.worker.board.domain.user.model.UserEntity;
 import co.worker.board.domain.user.repository.UserRepository;
+import co.worker.board.util.Word;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,12 +48,12 @@ public class DataLoader implements ApplicationRunner {
         superUser.setName("super");
         superUser.setPassword(passwordEncoder.encode("super"));
         superUser.setRole(AuthorityType.ROLE_ADMIN.getValue());
-        superUser.setSavedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        superUser.setSavedTime(LocalDateTime.now(ZoneId.of(Word.KST)));
         userRepository.save(superUser);
 
         //유저 삽입 (2번, 3번 유저)
-        userRepository.save(UserEntity.builder().userId("doqndnf").name("유저").password(passwordEncoder.encode("tjdghks1!")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
-        userRepository.save(UserEntity.builder().userId("doqndnf2").name("유저2").password(passwordEncoder.encode("tjdghks2@")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build());
+        userRepository.save(UserEntity.builder().userId("doqndnf").name("유저").password(passwordEncoder.encode("tjdghks1!")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build());
+        userRepository.save(UserEntity.builder().userId("doqndnf2").name("유저2").password(passwordEncoder.encode("tjdghks2@")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build());
 
         //게시판 삽입(2번 3번 유저가 작성한 글 20개)
         for(int i =1; i<=20; i++){
@@ -61,12 +62,12 @@ public class DataLoader implements ApplicationRunner {
             BoardEntity boardEntity;
             if(i%2==0){
                 user = userRepository.findById(2L);
-                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(2L).build();
+                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).boardSeq(2L).build();
             }else{
                 user = userRepository.findById(3L);
-                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
-                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).boardSeq(3L).build();
+                boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
+                replyEntity = ReplyEntity.builder().content("댓글입니다..."+i).user(user.get()).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).boardSeq(3L).build();
             }
             boardRepository.save(boardEntity);
             replyRepository.save(replyEntity);

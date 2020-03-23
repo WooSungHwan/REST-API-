@@ -1,5 +1,6 @@
 package co.worker.board.domain.user.model;
 
+import co.worker.board.util.Word;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class UserEntity {
         this.userId = id;
         this.name = name;
         this.password = password;
-        this.savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.savedTime = LocalDateTime.now(ZoneId.of(Word.KST));
         this.role = role;
     }
 

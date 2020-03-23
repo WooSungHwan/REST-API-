@@ -6,6 +6,7 @@ import co.worker.board.domain.board.repository.BoardRepository;
 import co.worker.board.domain.user.model.UserEntity;
 import co.worker.board.domain.user.model.UserParam;
 import co.worker.board.domain.user.repository.UserRepository;
+import co.worker.board.util.Word;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
@@ -84,20 +85,20 @@ public class BoardControllerTest {
             }else{
                 user = userRepository.findById(3L);
             }
-            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+            BoardEntity boardEntity = BoardEntity.builder().content("내용"+i).title("제목"+i).userEntity(user.get()).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
             boardRepository.save(boardEntity);
         }
     }
 
     @Test
     public void addBoard() throws Exception {
-        UserParam user = UserParam.builder().userId("addId").name("유저추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).role(0).build();
+        UserParam user = UserParam.builder().userId("addId").name("유저추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).role(0).build();
 
         BoardParam param = BoardParam.builder()
                 .content("추가내용")
                 .title("추가제목")
                 .user(user)
-                .savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .savedTime(LocalDateTime.now(ZoneId.of(Word.KST)))
                 .build();
 
         mockMvc.perform(post("/api/boards/add")
@@ -131,12 +132,12 @@ public class BoardControllerTest {
 
     @Test
     public void editBoard() throws Exception{
-        UserParam user = UserParam.builder().userId("editId").name("유저수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).role(0).build();
+        UserParam user = UserParam.builder().userId("editId").name("유저수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).role(0).build();
 
         BoardParam param = BoardParam.builder()
                 .content("수정내용")
                 .title("수정제목")
-                .user(user).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .user(user).savedTime(LocalDateTime.now(ZoneId.of(Word.KST)))
                 .build();
 
         mockMvc.perform(put("/api/boards/{seq}",3)

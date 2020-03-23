@@ -1,6 +1,7 @@
 package co.worker.board.domain.board.model;
 
 import co.worker.board.domain.user.model.UserParam;
+import co.worker.board.util.Word;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +26,5 @@ public class BoardParam {
     UserParam user;
     @NotEmpty
     String title;
-    LocalDateTime savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    LocalDateTime savedTime = LocalDateTime.now(ZoneId.of(Word.KST));
 }

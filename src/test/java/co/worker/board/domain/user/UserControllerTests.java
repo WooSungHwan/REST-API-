@@ -3,6 +3,7 @@ package co.worker.board.domain.user;
 import co.worker.board.domain.user.model.UserEntity;
 import co.worker.board.domain.user.model.UserParam;
 import co.worker.board.domain.user.repository.UserRepository;
+import co.worker.board.util.Word;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -75,14 +76,14 @@ public class UserControllerTests {
                 .alwaysDo(document).build();
 
         for(int i =1; i<=10; i++){
-            UserEntity entity = UserEntity.builder().password(passwordEncoder.encode("비밀번호"+i)).name("이름"+i).userId("아이디"+i).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+            UserEntity entity = UserEntity.builder().password(passwordEncoder.encode("비밀번호"+i)).name("이름"+i).userId("아이디"+i).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
             userRepository.save(entity);
         }
     }
 
     @Test
     public void add() throws Exception {
-        UserParam param = UserParam.builder().userId("아이디추가").name("이름추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam param = UserParam.builder().userId("아이디추가").name("이름추가").password(passwordEncoder.encode("비밀번호추가")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
 
         mockMvc.perform(post("/api/users/add")
                 .contentType("application/json;charset=utf-8")
@@ -121,7 +122,7 @@ public class UserControllerTests {
 
     @Test
     public void edit() throws Exception{
-        UserParam param = UserParam.builder().userId("아이디수정").name("이름수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
+        UserParam param = UserParam.builder().userId("아이디수정").name("이름수정").password(passwordEncoder.encode("비밀번호수정")).savedTime(LocalDateTime.now(ZoneId.of(Word.KST))).build();
 
         mockMvc.perform(put("/api/users/edit/{seq}", 3)
                 .contentType("application/json;charset=utf-8")

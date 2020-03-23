@@ -1,5 +1,6 @@
 package co.worker.board.domain.user.model;
 
+import co.worker.board.util.Word;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class SessionData {
     public SessionData(UserEntity user){
         this.id = UUID.randomUUID().toString();
         this.userEntity = user;
-        this.savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.savedTime = LocalDateTime.now(ZoneId.of(Word.KST));
     }
 
 }

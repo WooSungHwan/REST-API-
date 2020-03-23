@@ -1,6 +1,7 @@
 package co.worker.board.domain.board.model;
 
 import co.worker.board.domain.user.model.UserEntity;
+import co.worker.board.util.Word;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +30,6 @@ public class BoardEntity {
         this.content = content;
         this.userEntity = userEntity;
         this.title = title;
-        this.savedTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.savedTime = LocalDateTime.now(ZoneId.of(Word.KST));
     }
 }
