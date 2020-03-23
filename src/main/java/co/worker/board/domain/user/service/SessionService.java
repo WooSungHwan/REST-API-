@@ -1,5 +1,6 @@
 package co.worker.board.domain.user.service;
 
+import co.worker.board.domain.user.model.SecurityUser;
 import co.worker.board.domain.user.model.SessionData;
 import co.worker.board.domain.user.model.UserEntity;
 import co.worker.board.domain.user.model.UserParam;
@@ -21,9 +22,14 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
-    public String createSession(UserEntity userEntity) {
-        SessionData sessionData = new SessionData(userEntity);
+    public String createSession(SecurityUser user) {
+        SessionData sessionData = new SessionData(userRepository.findByUserId(user.getId()).get());
         sessionRepository.save(sessionData);
         return sessionData.getId();
+    }
+
+    public void deleteSession(String sessionId) {
+        SessionData sessionData = sessionRepository.getOne(sessionId);
+        sessionRepository.delete(sessionData);
     }
 }

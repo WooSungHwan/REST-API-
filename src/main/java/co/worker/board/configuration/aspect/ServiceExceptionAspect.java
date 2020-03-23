@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class ServiceExceptionAspect {
 
-    @Around("execution(* co.worker.board.*.service.*.*(..))")
+    @Around("execution(* co.worker.board.domain.*.service.*.*(..))")
     public Object serviceExceptionHandler(ProceedingJoinPoint joinPoint) throws Throwable {
         try{
             return joinPoint.proceed();

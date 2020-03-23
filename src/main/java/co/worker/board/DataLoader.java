@@ -7,6 +7,8 @@ import co.worker.board.domain.favorite.model.FavoriteEntity;
 import co.worker.board.domain.favorite.repository.FavoriteRepository;
 import co.worker.board.domain.reply.model.ReplyEntity;
 import co.worker.board.domain.reply.repository.ReplyRepository;
+import co.worker.board.domain.todo.model.TodoData;
+import co.worker.board.domain.todo.repository.TodoRepository;
 import co.worker.board.domain.user.model.UserEntity;
 import co.worker.board.domain.user.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -26,13 +28,15 @@ public class DataLoader implements ApplicationRunner {
     private PasswordEncoder passwordEncoder;
     private ReplyRepository replyRepository;
     private FavoriteRepository favoriteRepository;
+    private TodoRepository todoRepository;
 
-    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository, ReplyRepository replyRepository, FavoriteRepository favoriteRepository){
+    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, BoardRepository boardRepository, ReplyRepository replyRepository, FavoriteRepository favoriteRepository, TodoRepository todoRepository){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.boardRepository = boardRepository;
         this.replyRepository = replyRepository;
         this.favoriteRepository = favoriteRepository;
+        this.todoRepository = todoRepository;
     }
 
     @Override
@@ -71,6 +75,13 @@ public class DataLoader implements ApplicationRunner {
         favoriteRepository.save(FavoriteEntity.builder().boardSeq(4L).userSeq(2L).build());
         favoriteRepository.save(FavoriteEntity.builder().boardSeq(4L).userSeq(3L).build());
         favoriteRepository.save(FavoriteEntity.builder().boardSeq(5L).userSeq(3L).build());
+
+
+        //Todo
+        todoRepository.save(TodoData.builder().completed(false).item("테스트1").build());
+        todoRepository.save(TodoData.builder().completed(true).item("테스트2").build());
+        todoRepository.save(TodoData.builder().completed(false).item("테스트3").build());
+
 
         System.out.println("==============================DataLoader End================================");
     }

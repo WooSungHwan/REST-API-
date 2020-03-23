@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class RestControllerAspect {
 
-    @Around("execution(* co.worker.board.*.controller.*.*(..))")
+    @Around("execution(* co.worker.board.domain.*.controller.*.*(..))")
     public RestResponse<Object> restResponseHandler(ProceedingJoinPoint joinPoint) throws Throwable {
         return new RestResponse<>(HttpStatus.OK.value(), "success", joinPoint.proceed());
     }

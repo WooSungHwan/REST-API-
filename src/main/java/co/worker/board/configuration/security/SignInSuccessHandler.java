@@ -28,9 +28,7 @@ public class SignInSuccessHandler extends SavedRequestAwareAuthenticationSuccess
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 
         SecurityUser loginUser = (SecurityUser)authentication.getPrincipal();
-        Optional<UserEntity> user = userRepository.findByUserId(loginUser.getId());
-
-        String sessionId = sessionService.createSession(user.get());
+        String sessionId = sessionService.createSession(loginUser);
         httpServletResponse.addCookie(new Cookie("auth_key", sessionId));
 
         super.onAuthenticationSuccess(httpServletRequest, httpServletResponse, authentication);

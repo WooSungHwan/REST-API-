@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
@@ -20,8 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.println("----------------security config-----------------------");
         http
                 .authorizeRequests().antMatchers("/api/**").authenticated()
-                .antMatchers("/upload/**").authenticated();
-
+                .antMatchers("/upload/**").authenticated()
+                .antMatchers("/todo").permitAll();
 
         http
                 .cors()
@@ -34,16 +35,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin().successHandler(signInSuccessHandler());
 
-
-
         http.logout()
                 .logoutUrl("/logout")
+                .addLogoutHandler(logOutHandler())
                 .logoutSuccessUrl("/hello")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "auth_key")
                 .permitAll();
 
         System.out.println("----------------security config end -----------------------");
+    }
+
+    @Bean
+    public LogoutHandler logOutHandler(){
+        return new MyLogoutHandler();
     }
 
     @Bean
